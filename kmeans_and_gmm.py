@@ -2,6 +2,7 @@ import numpy as np
 import sklearn as sk
 import sklearn.model_selection as model_selection
 from sklearn.cluster import KMeans
+from sklearn.neighbors import KNeighborsRegressor
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
@@ -31,5 +32,15 @@ def kmeans(path,n_clusters):
     # print(preds_rmse)
     # print(mse)
 
+def knn(path):
+    train,test = data_split(path)
+    knn = KNeighborsRegressor()
+    knn.fit(train,train['price'])
+    preds = knn.predict(test)
+    mse = mean_squared_error(test['price'],preds)
+    preds_rmse = mse **(1/2)
+    print(preds_rmse)
+    print(mse)
 
-kmeans('cleaned_data.csv',6)
+# kmeans('cleaned_data.csv',6)
+knn('cleaned_data.csv')
