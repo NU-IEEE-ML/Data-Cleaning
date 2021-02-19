@@ -3,6 +3,7 @@ import sklearn as sk
 import sklearn.model_selection as model_selection
 from sklearn.cluster import KMeans
 from sklearn.neighbors import KNeighborsRegressor
+from sklearn.mixture import GaussianMixture as GM
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
@@ -42,5 +43,15 @@ def knn(path):
     print(preds_rmse)
     print(mse)
 
+
+def gmm(path):
+    train,test = data_split(path)
+    gm = GM(n_components=6,random_state=0).fit(train)
+    preds = gm.predict(test)
+    mse = mean_squared_error(test['price'], preds)
+    preds_rmse = mse ** (1 / 2)
+    print(preds_rmse)
+    print(mse)
 # kmeans('cleaned_data.csv',6)
 knn('cleaned_data.csv')
+gmm('cleaned_data.csv')
