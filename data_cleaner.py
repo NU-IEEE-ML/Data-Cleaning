@@ -17,11 +17,15 @@ def clean_data_v1(path):
        df['average_review'] = df[['average_review','review_scores_rating']].mean(axis = 1)
 
        #Right now we simply take the number of amenities
-       df['amenities'] = len(df['amenities'].array)
+       df['amenities'] = df['amenities'].str.count(',') + 1
+       df['host_is_superhost'] = df['host_is_superhost'].str.replace('t','1').str.replace('f','0').astype(float)
 
        #Extract the number of bathrooms from the string
        df['bathrooms'] = df['bathrooms_text'].str.extract(r'([0-9]{1}.?[0-9]?)')
        df['bathrooms'] = pd.to_numeric(df['bathrooms'])
+       df['price'] = df['price'].str.replace('$','')
+       df['price'] = df['price'].str.replace(',','')
+       df['price'] = df['price'].astype(float)
 
        #Drop columns that we don't currently use
        df = df.drop(columns = ['review_scores_accuracy',
