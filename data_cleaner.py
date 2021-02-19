@@ -1,4 +1,5 @@
 import pandas as pd
+import seaborn as sns
 import numpy as np
 import re
 
@@ -28,7 +29,7 @@ def clean_data_v1(path):
        df['price'] = df['price'].astype(float)
 
        #Drop columns that we don't currently use
-       df = df.drop(columns = ['review_scores_accuracy',
+       df = df.drop(columns = ['review_scores_accuracy','id',
               'review_scores_cleanliness','review_scores_checkin',
               'review_scores_communication', 'review_scores_location','review_scores_value','listing_url', 'scrape_id', 'last_scraped', 'name', 'description',
               'neighborhood_overview', 'picture_url', 'host_id', 'host_url',
@@ -46,9 +47,16 @@ def clean_data_v1(path):
               'last_review','host_since', 'host_location', 'host_about', 'host_response_time',
               'host_response_rate', 'host_acceptance_rate','host_verifications', 'host_has_profile_pic', 'host_identity_verified',
               'neighbourhood', 'neighbourhood_cleansed', 'latitude', 'longitude','number_of_reviews_ltm', 'review_scores_rating',
-              'reviews_per_month','bathrooms_text'], axis = 1)
-
+              'reviews_per_month','bathrooms_text','host_listings_count'], axis = 1)
+       #Filling NA values
+       for column in df.columns:
+              if column == 'id':
+                     continue
+              df[column] = df[column].fillna(df[column].mean())
+       #Normalizing data
+       df = ((df - df.min()) / (df.max() - df.min()))
        print(df.dtypes)
        cleaned_data = df.to_csv('cleaned_data.csv',index = False)
+
 
 clean_data_v1('chicago_listings_full.csv')
